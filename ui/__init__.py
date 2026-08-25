@@ -336,20 +336,17 @@ def preflight():
         return False
     return True
 
-def run(cdir = "", smode = False):
-    global config_dir
-    global service_mode
-    config_dir = cdir
-    service_mode = smode
-    set_log_dir(config_dir)
-    if setup():
-        #uvicorn.run("webui:app", port=8008, reload=True)
-        options()
+def run(config_dir=None, service_mode=False):
+    global config
+    init(config_dir)
+    if service_mode:
+        run_script()
     else:
-        load()
-        #uvicorn.run("webui:app", port=8008, reload=True)
-        download_script_run()
-        options()
+        try:
+            options()
+        except (EOFError, KeyboardInterrupt):
+            run_script()
+            
 
 def update_available():
     try:

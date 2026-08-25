@@ -1130,9 +1130,9 @@ class media:
                 return []
             Seasons = copy.deepcopy(self.Seasons)
             for season in Seasons[:]:
-                if (not season.collected(list) or season.version_missing()) and not season.watched() and season.released() and not season.downloading():
+                if (not season.collected(list) or season.version_missing()) and not season.watched() and season.released and not season.downloading():
                     for episode in season.Episodes[:]:
-                        if (episode.collected(list) and not episode.version_missing()) or episode.watched() or not episode.released() or episode.downloading():
+                        if (episode.collected(list) and not episode.version_missing()) or episode.watched() or not episode.released or episode.downloading():
                             season.Episodes.remove(episode)
                 else:
                     if season in Seasons:
@@ -1221,7 +1221,7 @@ class media:
                     if retry:
                         self.watch()
         elif self.type == 'show':
-            if len(self.versions()) > 0 and self.released() and (not self.collected(library) or self.version_missing()) and not self.watched():
+            if len(self.versions()) > 0 and self.released and (not self.collected(library) or self.version_missing()) and not self.watched():
                 self.isanime()
                 self.Seasons = self.uncollected(library)
                 # if there are uncollected episodes
@@ -1277,7 +1277,7 @@ class media:
                                 match = regex.match(
                                     season_queries_str, release.title, regex.I)
                                 for version in release.files:
-                                    if isinstance(version.wanted, int):
+                                    if hasattr(version, 'wanted') and isinstance(version.wanted, int):
                                         # if a multi season pack contains more than half of all uncollected episodes, accept it as a multi-season-pack.
                                         if version.wanted > minimum_episodes:
                                             multi_season_releases += [release]
@@ -1507,6 +1507,11 @@ class media:
 
     def debrid_download(self, force=False):
         debrid.check(self)
+        if len(self.Releases) > 0:
+            if debrid.download(self):
+                ui_print(f'[debrid] downloading... done')
+                return True, False
+             
         self.bitrate()
         if len(self.Releases) > 0:
             releases.print_releases(self.Releases, True)

@@ -5,8 +5,8 @@ from content import classes
 from ui.ui_print import *
 
 name = 'Trakt'
-client_id = "0183a05ad97098d87287fe46da4ae286f434f32e8e951caad4cc147c947d79a3"
-client_secret = "87109ed53fe1b4d6b0239e671f36cd2f17378384fa1ae09888a32643f83b7e6c"
+client_id = "pHbVNzLR5da9P4-GODsYtV6rZohyyhyLgCH73LQK6R0"
+client_secret = "5Jmd-x75KhP2BXaouHosxkoITiz7gR5fPDVc2ERTrDA"
 lists = []
 users = []
 current_user = ["", ""]
@@ -158,10 +158,15 @@ def get(url):
 
 def post(url, data):
     try:
-        response = session.post(url, headers={
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36',
-            'Content-type': "application/json", "trakt-api-key": client_id, "trakt-api-version": "2",
-            "Authorization": "Bearer " + current_user[1]}, data=data)
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Content-type': "application/json",
+            "trakt-api-key": client_id,
+            "trakt-api-version": "2"
+        }
+        if 'current_user' in globals() and len(current_user) > 1 and current_user[1] is not None:
+            headers["Authorization"] = "Bearer " + str(current_user[1])
+        response = session.post(url, headers=headers, data=data)
         logerror(response)
         response = json.loads(response.content, object_hook=lambda d: SimpleNamespace(**d))
         time.sleep(1.1)
