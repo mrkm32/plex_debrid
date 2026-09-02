@@ -351,7 +351,23 @@ def main():
     parser.add_argument('--apply', action='store_true', help="Execute removals on Trakt and AllDebrid.")
     parser.add_argument('--clean-duplicates', action='store_true', help="Also delete duplicate magnets from AllDebrid.")
     parser.add_argument('--dry-run', action='store_true', help="Only display the audit report without modifying anything.")
+    parser.add_argument('--daily', action='store_true', help="Run only if today's sync has not already been completed.")
+    parser.add_argument('--force', action='store_true', help="Force sync execution even if --daily already ran today.")
     args = parser.parse_args()
+
+    sync_date_file = os.path.join(PROJECT_DIR, '.last_sync_date')
+    today_str = time.strftime('%Y-%m-%d')
+
+    if args.daily and not args.force:
+        if os.path.exists(sync_date_file):
+            try:
+                with open(sync_date_file, 'r') as f:
+                    last_date = f.read().strip()
+                if last_date == today_str:
+                    print(f"[Daily Sync] Sync already completed today ({today_str}). Exiting.")
+                    return
+            except Exception:
+                pass
 
     apply_mode = args.apply and not args.dry_run
 
@@ -418,6 +434,11 @@ def main():
         else:
             print("[Note] Skipped AllDebrid duplicate cleanup (use --clean-duplicates to enable).")
         print("\nSync completed successfully!")
+        try:
+            with open(sync_date_file, 'w') as f:
+                f.write(today_str)
+        except Exception:
+            pass
     else:
         print("\n[Dry Run Completed] No modifications were made. Run with --apply to execute.")
 

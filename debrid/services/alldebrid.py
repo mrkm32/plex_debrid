@@ -72,12 +72,22 @@ def download(element, stream=True, query='', force=False):
 
         if release:
             link = release.download[0] if isinstance(release.download, list) else release.download
-            url = f"https://api.alldebrid.com/v4/magnet/upload?agent=plex_debrid&apikey={api_key}&magnets[]={link}"
-            res = session.get(url, timeout=10) if 'session' in globals() else requests.get(url, timeout=10)
-            data = res.json()
-            if data.get('status') == 'success':
-                ui_print(f'[alldebrid] successfully uploaded: {release.title}')
-                return [True]
+            url = f"https://api.alldebrid.com/v4.1/magnet/upload?agent=plex_debrid&apikey={api_key}&magnets[]={link}"
+            for attempt in range(3):
+                try:
+                    res = session.get(url, timeout=15) if 'session' in globals() else requests.get(url, timeout=15)
+                    data = res.json()
+                    if data.get('status') == 'success':
+                        ui_print(f'[alldebrid] successfully uploaded: {release.title}')
+                        return [True]
+                    elif data.get('status') == 'error':
+                        ui_print(f"[alldebrid] upload error: {data.get('error', {}).get('message', 'unknown error')}")
+                        return []
+                except Exception as ex:
+                    if attempt < 2:
+                        time.sleep(1)
+                        continue
+                    raise ex
     except Exception as e:
         ui_print(f'[alldebrid] upload error: {str(e)}')
     return []
