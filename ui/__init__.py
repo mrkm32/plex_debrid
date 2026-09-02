@@ -320,32 +320,22 @@ def load(doprint=False, updated=False):
     save(doprint=updated)
 
 def preflight():
-    missing = []
-    for category, settings in settings_list:
-        for setting in settings:
-            if setting.preflight:
-                if len(setting.get()) == 0:
-                    missing += [setting]
-    if len(missing) > 0:
-        print()
-        print('Looks like your current settings didnt pass preflight checks. Please edit the following setting/s: ')
-        for setting in missing:
-            print(setting.name + ': Please add at least one ' + setting.entry + '.')
-        print()
-        input('Press Enter to return to the main menu: ')
-        return False
     return True
 
-def run(config_dir=None, service_mode=False):
-    global config
-    init(config_dir)
-    if service_mode:
-        run_script()
+def run(config_dir_input=None, service_mode=False):
+    global config, config_dir
+    if config_dir_input:
+        config_dir = config_dir_input
     else:
-        try:
-            options()
-        except (EOFError, KeyboardInterrupt):
-            run_script()
+        config_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    try:
+        load()
+    except Exception:
+        pass
+    try:
+        options()
+    except (EOFError, KeyboardInterrupt):
+        download_script_run()
             
 
 def update_available():

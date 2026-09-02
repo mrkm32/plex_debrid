@@ -489,6 +489,8 @@ class watchlist(classes.watchlist):
 class season(classes.media):
     def __init__(self, other):
         self.watchlist = watchlist
+        if hasattr(other, 'released'):
+            delattr(other, 'released')
         self.__dict__.update(other.__dict__)
         self.EID = setEID(self)
         self.Episodes = []
@@ -523,6 +525,8 @@ class season(classes.media):
 class episode(classes.media):
     def __init__(self, other):
         self.watchlist = watchlist
+        if hasattr(other, 'released'):
+            delattr(other, 'released')
         self.__dict__.update(other.__dict__)
         self.EID = setEID(self)
         if hasattr(self, 'ids.trakt'):
@@ -547,6 +551,8 @@ class episode(classes.media):
 class show(classes.media):
     def __init__(self, other):
         self.watchlist = watchlist
+        if hasattr(other, 'released'):
+            delattr(other, 'released')
         self.__dict__.update(other.__dict__)
         self.Seasons = []
         self.guid = self.ids.trakt

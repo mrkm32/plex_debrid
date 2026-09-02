@@ -113,6 +113,11 @@ def scrape(query, altquery):
         url = 'https://torrentio.strem.fun/' + opts + \
             ("/" if len(opts) > 0 else "") + 'stream/movie/' + query + '.json'
         response = get(url)
+        if (not response or not hasattr(response, "streams") or len(response.streams) == 0) and len(opts) > 0:
+            url = 'https://torrentio.strem.fun/stream/movie/' + query + '.json'
+            fallback_response = get(url)
+            if fallback_response and hasattr(fallback_response, "streams") and len(fallback_response.streams) > 0:
+                response = fallback_response
         if not hasattr(response, "streams") or len(response.streams) == 0:
             type = "show"
             s = 1
@@ -130,6 +135,12 @@ def scrape(query, altquery):
             ("/" if len(opts) > 0 else "") + 'stream/series/' + \
             query + ':' + str(int(s)) + ':' + str(int(e)) + '.json'
         response = get(url)
+        if (not response or not hasattr(response, "streams") or len(response.streams) == 0) and len(opts) > 0:
+            url = 'https://torrentio.strem.fun/stream/series/' + \
+                query + ':' + str(int(s)) + ':' + str(int(e)) + '.json'
+            fallback_response = get(url)
+            if fallback_response and hasattr(fallback_response, "streams") and len(fallback_response.streams) > 0:
+                response = fallback_response
     if not hasattr(response, "streams"):
         try:
             if not response == None:

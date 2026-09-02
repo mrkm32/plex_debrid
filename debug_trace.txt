@@ -1,0 +1,143 @@
+/opt/homebrew/lib/python3.11/site-packages/requests/__init__.py:109: RequestsDependencyWarning: urllib3 (1.26.20) or chardet (7.4.3)/charset_normalizer (2.1.1) doesn't match a supported version!
+  warnings.warn(
+[3J[H[2J                                                         
+           __                  __     __         _     __
+    ____  / /__  _  __    ____/ /__  / /_  _____(_)___/ /
+   / __ \/ / _ \| |/_/   / __  / _ \/ __ \/ ___/ / __  / 
+  / /_/ / /  __/>  <    / /_/ /  __/ /_/ / /  / / /_/ /  
+ / .___/_/\___/_/|_|____\__,_/\___/_.___/_/  /_/\__,_/   
+/_/               /_____/                         [v2.95]
+
+Options/
+
+1) Run
+2) Settings
+3) Ignored Media
+4) Scraper
+
+Type exit to quit.
+
+Choose an action: [3J[H[2J                                                         
+           __                  __     __         _     __
+    ____  / /__  _  __    ____/ /__  / /_  _____(_)___/ /
+   / __ \/ / _ \| |/_/   / __  / _ \/ __ \/ ___/ / __  / 
+  / /_/ / /  __/>  <    / /_/ /  __/ /_/ / /  / / /_/ /  
+ / .___/_/\___/_/|_|____\__,_/\___/_.___/_/  /_/\__,_/   
+/_/               /_____/                         [v2.95]
+
+Options/Settings/
+
+0) Back
+1) Content Services
+2) Library Services
+3) Scraper Settings
+4) Debrid Services
+5) UI Settings
+
+Type "discard" to go back and discard changes.
+
+Choose an action: [3J[H[2J                                                         
+           __                  __     __         _     __
+    ____  / /__  _  __    ____/ /__  / /_  _____(_)___/ /
+   / __ \/ / _ \| |/_/   / __  / _ \/ __ \/ ___/ / __  / 
+  / /_/ / /  __/>  <    / /_/ /  __/ /_/ / /  / / /_/ /  
+ / .___/_/\___/_/|_|____\__,_/\___/_.___/_/  /_/\__,_/   
+/_/               /_____/                         [v2.95]
+
+Options/Settings/Content Services/
+
+[3J[H[2J                                                         
+           __                  __     __         _     __
+    ____  / /__  _  __    ____/ /__  / /_  _____(_)___/ /
+   / __ \/ / _ \| |/_/   / __  / _ \/ __ \/ ___/ / __  / 
+  / /_/ / /  __/>  <    / /_/ /  __/ /_/ / /  / / /_/ /  
+ / .___/_/\___/_/|_|____\__,_/\___/_.___/_/  /_/\__,_/   
+/_/               /_____/                         [v2.95]
+
+Options/Settings/Content Services/Content Services
+
+
+0) Back
+1) Plex
+2) Trakt
+3) Overseerr
+
+Choose a content service: [3J[H[2J
+                                                         
+           __                  __     __         _     __
+    ____  / /__  _  __    ____/ /__  / /_  _____(_)___/ /
+   / __ \/ / _ \| |/_/   / __  / _ \/ __ \/ ___/ / __  / 
+  / /_/ / /  __/>  <    / /_/ /  __/ /_/ / /  / / /_/ /  
+ / .___/_/\___/_/|_|____\__,_/\___/_.___/_/  /_/\__,_/   
+/_/               /_____/                         [v2.95]
+
+Options/Settings/Content Services/Content Services/Trakt
+
+0) Back
+1) Trakt users
+2) Trakt lists
+3) Trakt auto remove
+4) Trakt early movie releases
+
+Choose an action: Current Trakt users: "[]"
+
+0) Back
+1) Edit
+
+Choose an action: 
+0) Back
+1) Add user
+
+Choose an action: Please provide a name for this Trakt user: Traceback (most recent call last):
+  File "/Users/markmatthews/plex_debrid/content/services/trakt.py", line 171, in post
+    response = json.loads(response.content, object_hook=lambda d: SimpleNamespace(**d))
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/json/__init__.py", line 359, in loads
+    return cls(**kw).decode(s)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/json/decoder.py", line 337, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.11/3.11.15_3/Frameworks/Python.framework/Versions/3.11/lib/python3.11/json/decoder.py", line 355, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+[3J[H[2Jtrakt.tv could not be reached right now! Please try again later. The script will most likely exit after this message.
+It seems that this authentification service could not be reached. Please try again at a later time.
+                                                         
+           __                  __     __         _     __
+    ____  / /__  _  __    ____/ /__  / /_  _____(_)___/ /
+   / __ \/ / _ \| |/_/   / __  / _ \/ __ \/ ___/ / __  / 
+  / /_/ / /  __/>  <    / /_/ /  __/ /_/ / /  / / /_/ /  
+ / .___/_/\___/_/|_|____\__,_/\___/_.___/_/  /_/\__,_/   
+/_/               /_____/                         [v2.95]
+
+Options/Settings/
+
+0) Back
+1) Content Services
+2) Library Services
+3) Scraper Settings
+4) Debrid Services
+5) UI Settings
+
+Type "discard" to go back and discard changes.
+
+Choose an action: [3J[H[2JCurrent settings saved!
+                                                         
+           __                  __     __         _     __
+    ____  / /__  _  __    ____/ /__  / /_  _____(_)___/ /
+   / __ \/ / _ \| |/_/   / __  / _ \/ __ \/ ___/ / __  / 
+  / /_/ / /  __/>  <    / /_/ /  __/ /_/ / /  / / /_/ /  
+ / .___/_/\___/_/|_|____\__,_/\___/_.___/_/  /_/\__,_/   
+/_/               /_____/                         [v2.95]
+
+Options/
+
+1) Run
+2) Settings
+3) Ignored Media
+4) Scraper
+
+Type exit to quit.
+
+Choose an action: 

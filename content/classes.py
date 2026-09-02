@@ -1130,9 +1130,9 @@ class media:
                 return []
             Seasons = copy.deepcopy(self.Seasons)
             for season in Seasons[:]:
-                if (not season.collected(list) or season.version_missing()) and not season.watched() and season.released and not season.downloading():
+                if (not season.collected(list) or season.version_missing()) and not season.watched() and season.released() and not season.downloading():
                     for episode in season.Episodes[:]:
-                        if (episode.collected(list) and not episode.version_missing()) or episode.watched() or not episode.released or episode.downloading():
+                        if (episode.collected(list) and not episode.version_missing()) or episode.watched() or not episode.released() or episode.downloading():
                             season.Episodes.remove(episode)
                 else:
                     if season in Seasons:
@@ -1221,7 +1221,7 @@ class media:
                     if retry:
                         self.watch()
         elif self.type == 'show':
-            if len(self.versions()) > 0 and self.released and (not self.collected(library) or self.version_missing()) and not self.watched():
+            if len(self.versions()) > 0 and self.released() and (not self.collected(library) or self.version_missing()) and not self.watched():
                 self.isanime()
                 self.Seasons = self.uncollected(library)
                 # if there are uncollected episodes
@@ -1366,9 +1366,9 @@ class media:
             if len(self.Episodes) > 2:
                 if self.season_pack(scraped_releases):
                     debrid_downloaded, retry = self.debrid_download()
-                    # if scraper.traditional() or debrid_downloaded:
-                    for episode in self.Episodes:
-                        episode.skip_scraping = True
+                    if debrid_downloaded:
+                        for episode in self.Episodes:
+                            episode.skip_scraping = True
                 # If there was nothing downloaded, scrape specifically for this season
                 if not debrid_downloaded:
                     self.Releases = []
@@ -1509,6 +1509,9 @@ class media:
         debrid.check(self)
         if len(self.Releases) > 0:
             if debrid.download(self):
+                if hasattr(self, "versions") and len(self.versions()) > 0:
+                    self.version = self.versions()[0]
+                    self.downloaded()
                 ui_print(f'[debrid] downloading... done')
                 return True, False
              
@@ -1596,6 +1599,8 @@ class media:
         for release in self.Releases:
             if len(release.cached) > 0 and int(release.resolution) > season_releases:
                 season_releases = int(release.resolution)
+        if season_releases == -1:
+            return False
         for i, episode in enumerate(self.Episodes):
             ep_match = regex.compile(episode.deviation(), regex.IGNORECASE)
             for release in releases:
