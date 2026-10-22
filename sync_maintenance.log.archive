@@ -1,0 +1,554 @@
+Trakt Collection & AllDebrid Sync Audit - 2026-09-02 15:06:51
+Mode: APPLY (Changes will be executed)
+======================================================================
+
+1. Fetching AllDebrid magnets...
+   Found 102 active/ready magnets.
+
+2. Fetching Trakt Collection...
+   Found 32 shows and 14 movies in Trakt Collection.
+
+3. Reconciling library...
+
+----------------------------------------------------------------------
+AUDIT SUMMARY:
+  • Phantom Movies in Trakt (missing from AllDebrid): 0
+  • Shows with Phantom Episodes in Trakt: 0
+  • Redundant Magnet Duplicates in AllDebrid: 0
+----------------------------------------------------------------------
+
+4. Executing Removals...
+[Trakt] Nothing to remove.
+[AllDebrid] No duplicates to clean.
+
+Sync completed successfully!
+/opt/homebrew/lib/python3.11/site-packages/requests/__init__.py:109: RequestsDependencyWarning: urllib3 (1.26.20) or chardet (7.4.3)/charset_normalizer (2.1.1) doesn't match a supported version!
+  warnings.warn(
+======================================================================
+Trakt Collection & AllDebrid Sync Audit - 2026-09-03 04:00:05
+Mode: APPLY (Changes will be executed)
+======================================================================
+
+1. Fetching AllDebrid magnets...
+   Found 102 active/ready magnets.
+
+2. Fetching Trakt Collection...
+   Found 32 shows and 14 movies in Trakt Collection.
+
+3. Reconciling library...
+
+----------------------------------------------------------------------
+AUDIT SUMMARY:
+  • Phantom Movies in Trakt (missing from AllDebrid): 0
+  • Shows with Phantom Episodes in Trakt: 0
+  • Redundant Magnet Duplicates in AllDebrid: 0
+----------------------------------------------------------------------
+
+4. Executing Removals...
+[Trakt] Nothing to remove.
+[AllDebrid] No duplicates to clean.
+
+Sync completed successfully!
+/opt/homebrew/lib/python3.11/site-packages/requests/__init__.py:109: RequestsDependencyWarning: urllib3 (1.26.20) or chardet (7.4.3)/charset_normalizer (2.1.1) doesn't match a supported version!
+  warnings.warn(
+======================================================================
+Trakt Collection & AllDebrid Sync Audit - 2026-09-04 04:00:05
+Mode: APPLY (Changes will be executed)
+======================================================================
+
+1. Fetching AllDebrid magnets...
+[Error] Failed to fetch AllDebrid magnets: HTTPSConnectionPool(host='api.alldebrid.com', port=443): Max retries exceeded with url: /v4.1/magnet/status?agent=plex_debrid&apikey=Jegkw1s6479o3iLZmLVZ (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x104d44f90>: Failed to establish a new connection: [Errno 8] nodename nor servname provided, or not known'))
+   Found 0 active/ready magnets.
+
+2. Fetching Trakt Collection...
+[Error] Failed to fetch Trakt shows collection: HTTPSConnectionPool(host='api.trakt.tv', port=443): Max retries exceeded with url: /sync/collection/shows?extended=metadata (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x10ad93610>: Failed to establish a new connection: [Errno 8] nodename nor servname provided, or not known'))
+[Error] Failed to fetch Trakt movies collection: HTTPSConnectionPool(host='api.trakt.tv', port=443): Max retries exceeded with url: /sync/collection/movies?extended=metadata (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x10ad93d10>: Failed to establish a new connection: [Errno 8] nodename nor servname provided, or not known'))
+   Found 0 shows and 0 movies in Trakt Collection.
+
+3. Reconciling library...
+
+----------------------------------------------------------------------
+AUDIT SUMMARY:
+  • Phantom Movies in Trakt (missing from AllDebrid): 0
+  • Shows with Phantom Episodes in Trakt: 0
+  • Redundant Magnet Duplicates in AllDebrid: 0
+----------------------------------------------------------------------
+
+4. Executing Removals...
+[Trakt] Nothing to remove.
+[AllDebrid] No duplicates to clean.
+
+Sync completed successfully!
+/opt/homebrew/lib/python3.11/site-packages/requests/__init__.py:109: RequestsDependencyWarning: urllib3 (1.26.20) or chardet (7.4.3)/charset_normalizer (2.1.1) doesn't match a supported version!
+  warnings.warn(
+======================================================================
+Trakt Collection & AllDebrid Sync Audit - 2026-09-05 04:00:05
+Mode: APPLY (Changes will be executed)
+======================================================================
+
+1. Fetching AllDebrid magnets...
+   Found 115 active/ready magnets.
+
+2. Fetching Trakt Collection...
+   Found 32 shows and 16 movies in Trakt Collection.
+
+3. Reconciling library...
+
+----------------------------------------------------------------------
+AUDIT SUMMARY:
+  • Phantom Movies in Trakt (missing from AllDebrid): 0
+  • Shows with Phantom Episodes in Trakt: 0
+  • Redundant Magnet Duplicates in AllDebrid: 2
+----------------------------------------------------------------------
+
+[!] Redundant Magnet Duplicates in AllDebrid:
+    - Remove #730586663 (Lanterns.2026.S01E03.1080p.HEVC.x265-MeGusta[EZTVx.to].mkv) : Duplicate for show:lanterns 2026:s1e3
+      Keeping #724307066 (Lanterns.2026.S01E03.720p.x264-FENiX)
+    - Remove #730586645 (Lanterns.2026.S01E02.1080p.HEVC.x265-MeGusta[EZTVx.to].mkv) : Duplicate for show:lanterns 2026:s1e2
+      Keeping #704385847 (Lanterns.2026.S01E02.1080p.WEB.h264-ETHEL[EZTVx.to].mkv)
+
+4. Executing Removals...
+[Trakt] Nothing to remove.
+[AllDebrid Clean] Deleted redundant magnet #730586663: Lanterns.2026.S01E03.1080p.HEVC.x265-MeGusta[EZTVx.to].mkv
+[AllDebrid Clean] Deleted redundant magnet #730586645: Lanterns.2026.S01E02.1080p.HEVC.x265-MeGusta[EZTVx.to].mkv
+[AllDebrid Clean] Successfully removed 2 duplicate magnets.
+
+Sync completed successfully!
+/opt/homebrew/lib/python3.11/site-packages/requests/__init__.py:109: RequestsDependencyWarning: urllib3 (1.26.20) or chardet (7.4.3)/charset_normalizer (2.1.1) doesn't match a supported version!
+  warnings.warn(
+======================================================================
+Trakt Collection & AllDebrid Sync Audit - 2026-09-06 04:00:05
+Mode: APPLY (Changes will be executed)
+======================================================================
+
+1. Fetching AllDebrid magnets...
+   Found 113 active/ready magnets.
+
+2. Fetching Trakt Collection...
+   Found 32 shows and 16 movies in Trakt Collection.
+
+3. Reconciling library...
+
+----------------------------------------------------------------------
+AUDIT SUMMARY:
+  • Phantom Movies in Trakt (missing from AllDebrid): 0
+  • Shows with Phantom Episodes in Trakt: 0
+  • Redundant Magnet Duplicates in AllDebrid: 0
+----------------------------------------------------------------------
+
+4. Executing Removals...
+[Trakt] Nothing to remove.
+[AllDebrid] No duplicates to clean.
+
+Sync completed successfully!
+/opt/homebrew/lib/python3.11/site-packages/requests/__init__.py:109: RequestsDependencyWarning: urllib3 (1.26.20) or chardet (7.4.3)/charset_normalizer (2.1.1) doesn't match a supported version!
+  warnings.warn(
+======================================================================
+Trakt Collection & AllDebrid Sync Audit - 2026-09-07 04:00:05
+Mode: APPLY (Changes will be executed)
+======================================================================
+
+1. Fetching AllDebrid magnets...
+   Found 114 active/ready magnets.
+
+2. Fetching Trakt Collection...
+   Found 32 shows and 16 movies in Trakt Collection.
+
+3. Reconciling library...
+
+----------------------------------------------------------------------
+AUDIT SUMMARY:
+  • Phantom Movies in Trakt (missing from AllDebrid): 0
+  • Shows with Phantom Episodes in Trakt: 0
+  • Redundant Magnet Duplicates in AllDebrid: 0
+----------------------------------------------------------------------
+
+4. Executing Removals...
+[Trakt] Nothing to remove.
+[AllDebrid] No duplicates to clean.
+
+Sync completed successfully!
+/opt/homebrew/lib/python3.11/site-packages/requests/__init__.py:109: RequestsDependencyWarning: urllib3 (1.26.20) or chardet (7.4.3)/charset_normalizer (2.1.1) doesn't match a supported version!
+  warnings.warn(
+======================================================================
+Trakt Collection & AllDebrid Sync Audit - 2026-09-08 04:00:04
+Mode: APPLY (Changes will be executed)
+======================================================================
+
+1. Fetching AllDebrid magnets...
+   Found 114 active/ready magnets.
+
+2. Fetching Trakt Collection...
+   Found 32 shows and 16 movies in Trakt Collection.
+
+3. Reconciling library...
+
+----------------------------------------------------------------------
+AUDIT SUMMARY:
+  • Phantom Movies in Trakt (missing from AllDebrid): 0
+  • Shows with Phantom Episodes in Trakt: 0
+  • Redundant Magnet Duplicates in AllDebrid: 0
+----------------------------------------------------------------------
+
+4. Executing Removals...
+[Trakt] Nothing to remove.
+[AllDebrid] No duplicates to clean.
+
+Sync completed successfully!
+/opt/homebrew/lib/python3.11/site-packages/requests/__init__.py:109: RequestsDependencyWarning: urllib3 (1.26.20) or chardet (7.4.3)/charset_normalizer (2.1.1) doesn't match a supported version!
+  warnings.warn(
+======================================================================
+Trakt Collection & AllDebrid Sync Audit - 2026-09-09 04:00:05
+Mode: APPLY (Changes will be executed)
+======================================================================
+
+1. Fetching AllDebrid magnets...
+   Found 114 active/ready magnets.
+
+2. Fetching Trakt Collection...
+   Found 0 shows and 0 movies in Trakt Collection.
+
+3. Reconciling library...
+
+----------------------------------------------------------------------
+AUDIT SUMMARY:
+  • Phantom Movies in Trakt (missing from AllDebrid): 0
+  • Shows with Phantom Episodes in Trakt: 0
+  • Redundant Magnet Duplicates in AllDebrid: 0
+----------------------------------------------------------------------
+
+4. Executing Removals...
+[Trakt] Nothing to remove.
+[AllDebrid] No duplicates to clean.
+
+Sync completed successfully!
+/opt/homebrew/lib/python3.11/site-packages/requests/__init__.py:109: RequestsDependencyWarning: urllib3 (1.26.20) or chardet (7.4.3)/charset_normalizer (2.1.1) doesn't match a supported version!
+  warnings.warn(
+======================================================================
+Trakt Collection & AllDebrid Sync Audit - 2026-09-10 04:00:05
+Mode: APPLY (Changes will be executed)
+======================================================================
+
+1. Fetching AllDebrid magnets...
+   Found 115 active/ready magnets.
+
+2. Fetching Trakt Collection...
+   Found 0 shows and 0 movies in Trakt Collection.
+
+3. Reconciling library...
+
+----------------------------------------------------------------------
+AUDIT SUMMARY:
+  • Phantom Movies in Trakt (missing from AllDebrid): 0
+  • Shows with Phantom Episodes in Trakt: 0
+  • Redundant Magnet Duplicates in AllDebrid: 0
+----------------------------------------------------------------------
+
+4. Executing Removals...
+[Trakt] Nothing to remove.
+[AllDebrid] No duplicates to clean.
+
+Sync completed successfully!
+/opt/homebrew/lib/python3.11/site-packages/requests/__init__.py:109: RequestsDependencyWarning: urllib3 (1.26.20) or chardet (7.4.3)/charset_normalizer (2.1.1) doesn't match a supported version!
+  warnings.warn(
+======================================================================
+Trakt Collection & AllDebrid Sync Audit - 2026-09-11 04:00:02
+Mode: APPLY (Changes will be executed)
+======================================================================
+
+1. Fetching AllDebrid magnets...
+   Found 115 active/ready magnets.
+
+2. Fetching Trakt Collection...
+   Found 0 shows and 0 movies in Trakt Collection.
+
+3. Reconciling library...
+
+----------------------------------------------------------------------
+AUDIT SUMMARY:
+  • Phantom Movies in Trakt (missing from AllDebrid): 0
+  • Shows with Phantom Episodes in Trakt: 0
+  • Redundant Magnet Duplicates in AllDebrid: 0
+----------------------------------------------------------------------
+
+4. Executing Removals...
+[Trakt] Nothing to remove.
+[AllDebrid] No duplicates to clean.
+
+Sync completed successfully!
+/opt/homebrew/lib/python3.11/site-packages/requests/__init__.py:109: RequestsDependencyWarning: urllib3 (1.26.20) or chardet (7.4.3)/charset_normalizer (2.1.1) doesn't match a supported version!
+  warnings.warn(
+======================================================================
+Trakt Collection & AllDebrid Sync Audit - 2026-09-12 04:00:05
+Mode: APPLY (Changes will be executed)
+======================================================================
+
+1. Fetching AllDebrid magnets...
+   Found 115 active/ready magnets.
+
+2. Fetching Trakt Collection...
+   Found 0 shows and 0 movies in Trakt Collection.
+
+3. Reconciling library...
+
+----------------------------------------------------------------------
+AUDIT SUMMARY:
+  • Phantom Movies in Trakt (missing from AllDebrid): 0
+  • Shows with Phantom Episodes in Trakt: 0
+  • Redundant Magnet Duplicates in AllDebrid: 0
+----------------------------------------------------------------------
+
+4. Executing Removals...
+[Trakt] Nothing to remove.
+[AllDebrid] No duplicates to clean.
+
+Sync completed successfully!
+/opt/homebrew/lib/python3.11/site-packages/requests/__init__.py:109: RequestsDependencyWarning: urllib3 (1.26.20) or chardet (7.4.3)/charset_normalizer (2.1.1) doesn't match a supported version!
+  warnings.warn(
+======================================================================
+Trakt Collection & AllDebrid Sync Audit - 2026-09-13 04:00:03
+Mode: APPLY (Changes will be executed)
+======================================================================
+
+1. Fetching AllDebrid magnets...
+   Found 115 active/ready magnets.
+
+2. Fetching Trakt Collection...
+   Found 0 shows and 0 movies in Trakt Collection.
+
+3. Reconciling library...
+
+----------------------------------------------------------------------
+AUDIT SUMMARY:
+  • Phantom Movies in Trakt (missing from AllDebrid): 0
+  • Shows with Phantom Episodes in Trakt: 0
+  • Redundant Magnet Duplicates in AllDebrid: 0
+----------------------------------------------------------------------
+
+4. Executing Removals...
+[Trakt] Nothing to remove.
+[AllDebrid] No duplicates to clean.
+
+Sync completed successfully!
+/opt/homebrew/lib/python3.11/site-packages/requests/__init__.py:109: RequestsDependencyWarning: urllib3 (1.26.20) or chardet (7.4.3)/charset_normalizer (2.1.1) doesn't match a supported version!
+  warnings.warn(
+======================================================================
+Trakt Collection & AllDebrid Sync Audit - 2026-09-14 04:00:04
+Mode: APPLY (Changes will be executed)
+======================================================================
+
+1. Fetching AllDebrid magnets...
+[Error] Failed to fetch AllDebrid magnets: HTTPSConnectionPool(host='api.alldebrid.com', port=443): Max retries exceeded with url: /v4.1/magnet/status?agent=plex_debrid&apikey=Jegkw1s6479o3iLZmLVZ (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x10822ba50>: Failed to establish a new connection: [Errno 8] nodename nor servname provided, or not known'))
+   Found 0 active/ready magnets.
+
+2. Fetching Trakt Collection...
+[Error] Failed to fetch Trakt shows collection: HTTPSConnectionPool(host='api.trakt.tv', port=443): Max retries exceeded with url: /sync/collection/shows?extended=metadata (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x108240410>: Failed to establish a new connection: [Errno 8] nodename nor servname provided, or not known'))
+[Error] Failed to fetch Trakt movies collection: HTTPSConnectionPool(host='api.trakt.tv', port=443): Max retries exceeded with url: /sync/collection/movies?extended=metadata (Caused by NewConnectionError('<urllib3.connection.HTTPSConnection object at 0x108240b10>: Failed to establish a new connection: [Errno 8] nodename nor servname provided, or not known'))
+   Found 0 shows and 0 movies in Trakt Collection.
+
+3. Reconciling library...
+
+----------------------------------------------------------------------
+AUDIT SUMMARY:
+  • Phantom Movies in Trakt (missing from AllDebrid): 0
+  • Shows with Phantom Episodes in Trakt: 0
+  • Redundant Magnet Duplicates in AllDebrid: 0
+----------------------------------------------------------------------
+
+4. Executing Removals...
+[Trakt] Nothing to remove.
+[AllDebrid] No duplicates to clean.
+
+Sync completed successfully!
+/opt/homebrew/lib/python3.11/site-packages/requests/__init__.py:109: RequestsDependencyWarning: urllib3 (1.26.20) or chardet (7.4.3)/charset_normalizer (2.1.1) doesn't match a supported version!
+  warnings.warn(
+======================================================================
+Trakt Collection & AllDebrid Sync Audit - 2026-09-15 04:00:05
+Mode: APPLY (Changes will be executed)
+======================================================================
+
+1. Fetching AllDebrid magnets...
+   Found 115 active/ready magnets.
+
+2. Fetching Trakt Collection...
+   Found 0 shows and 0 movies in Trakt Collection.
+
+3. Reconciling library...
+
+----------------------------------------------------------------------
+AUDIT SUMMARY:
+  • Phantom Movies in Trakt (missing from AllDebrid): 0
+  • Shows with Phantom Episodes in Trakt: 0
+  • Redundant Magnet Duplicates in AllDebrid: 0
+----------------------------------------------------------------------
+
+4. Executing Removals...
+[Trakt] Nothing to remove.
+[AllDebrid] No duplicates to clean.
+
+Sync completed successfully!
+/opt/homebrew/lib/python3.11/site-packages/requests/__init__.py:109: RequestsDependencyWarning: urllib3 (1.26.20) or chardet (7.4.3)/charset_normalizer (2.1.1) doesn't match a supported version!
+  warnings.warn(
+======================================================================
+Trakt Collection & AllDebrid Sync Audit - 2026-09-16 04:00:05
+Mode: APPLY (Changes will be executed)
+======================================================================
+
+1. Fetching AllDebrid magnets...
+   Found 115 active/ready magnets.
+
+2. Fetching Trakt Collection...
+   Found 0 shows and 0 movies in Trakt Collection.
+
+3. Reconciling library...
+
+----------------------------------------------------------------------
+AUDIT SUMMARY:
+  • Phantom Movies in Trakt (missing from AllDebrid): 0
+  • Shows with Phantom Episodes in Trakt: 0
+  • Redundant Magnet Duplicates in AllDebrid: 0
+----------------------------------------------------------------------
+
+4. Executing Removals...
+[Trakt] Nothing to remove.
+[AllDebrid] No duplicates to clean.
+
+Sync completed successfully!
+/opt/homebrew/lib/python3.11/site-packages/requests/__init__.py:109: RequestsDependencyWarning: urllib3 (1.26.20) or chardet (7.4.3)/charset_normalizer (2.1.1) doesn't match a supported version!
+  warnings.warn(
+======================================================================
+Trakt Collection & AllDebrid Sync Audit - 2026-09-17 04:00:05
+Mode: APPLY (Changes will be executed)
+======================================================================
+
+1. Fetching AllDebrid magnets...
+   Found 115 active/ready magnets.
+
+2. Fetching Trakt Collection...
+   Found 0 shows and 0 movies in Trakt Collection.
+
+3. Reconciling library...
+
+----------------------------------------------------------------------
+AUDIT SUMMARY:
+  • Phantom Movies in Trakt (missing from AllDebrid): 0
+  • Shows with Phantom Episodes in Trakt: 0
+  • Redundant Magnet Duplicates in AllDebrid: 0
+----------------------------------------------------------------------
+
+4. Executing Removals...
+[Trakt] Nothing to remove.
+[AllDebrid] No duplicates to clean.
+
+Sync completed successfully!
+/opt/homebrew/lib/python3.11/site-packages/requests/__init__.py:109: RequestsDependencyWarning: urllib3 (1.26.20) or chardet (7.4.3)/charset_normalizer (2.1.1) doesn't match a supported version!
+  warnings.warn(
+======================================================================
+Trakt Collection & AllDebrid Sync Audit - 2026-09-18 04:00:05
+Mode: APPLY (Changes will be executed)
+======================================================================
+
+1. Fetching AllDebrid magnets...
+   Found 114 active/ready magnets.
+
+2. Fetching Trakt Collection...
+   Found 0 shows and 0 movies in Trakt Collection.
+
+3. Reconciling library...
+
+----------------------------------------------------------------------
+AUDIT SUMMARY:
+  • Phantom Movies in Trakt (missing from AllDebrid): 0
+  • Shows with Phantom Episodes in Trakt: 0
+  • Redundant Magnet Duplicates in AllDebrid: 0
+----------------------------------------------------------------------
+
+4. Executing Removals...
+[Trakt] Nothing to remove.
+[AllDebrid] No duplicates to clean.
+
+Sync completed successfully!
+/opt/homebrew/lib/python3.11/site-packages/requests/__init__.py:109: RequestsDependencyWarning: urllib3 (1.26.20) or chardet (7.4.3)/charset_normalizer (2.1.1) doesn't match a supported version!
+  warnings.warn(
+======================================================================
+Trakt Collection & AllDebrid Sync Audit - 2026-09-19 04:00:05
+Mode: APPLY (Changes will be executed)
+======================================================================
+
+1. Fetching AllDebrid magnets...
+   Found 114 active/ready magnets.
+
+2. Fetching Trakt Collection...
+   Found 0 shows and 0 movies in Trakt Collection.
+
+3. Reconciling library...
+
+----------------------------------------------------------------------
+AUDIT SUMMARY:
+  • Phantom Movies in Trakt (missing from AllDebrid): 0
+  • Shows with Phantom Episodes in Trakt: 0
+  • Redundant Magnet Duplicates in AllDebrid: 0
+----------------------------------------------------------------------
+
+4. Executing Removals...
+[Trakt] Nothing to remove.
+[AllDebrid] No duplicates to clean.
+
+Sync completed successfully!
+/opt/homebrew/lib/python3.11/site-packages/requests/__init__.py:109: RequestsDependencyWarning: urllib3 (1.26.20) or chardet (7.4.3)/charset_normalizer (2.1.1) doesn't match a supported version!
+  warnings.warn(
+======================================================================
+Trakt Collection & AllDebrid Sync Audit - 2026-09-20 04:00:05
+Mode: APPLY (Changes will be executed)
+======================================================================
+
+1. Fetching AllDebrid magnets...
+   Found 116 active/ready magnets.
+
+2. Fetching Trakt Collection...
+   Found 0 shows and 0 movies in Trakt Collection.
+
+3. Reconciling library...
+
+----------------------------------------------------------------------
+AUDIT SUMMARY:
+  • Phantom Movies in Trakt (missing from AllDebrid): 0
+  • Shows with Phantom Episodes in Trakt: 0
+  • Redundant Magnet Duplicates in AllDebrid: 0
+----------------------------------------------------------------------
+
+4. Executing Removals...
+[Trakt] Nothing to remove.
+[AllDebrid] No duplicates to clean.
+
+Sync completed successfully!
+/opt/homebrew/lib/python3.11/site-packages/requests/__init__.py:109: RequestsDependencyWarning: urllib3 (1.26.20) or chardet (7.4.3)/charset_normalizer (2.1.1) doesn't match a supported version!
+  warnings.warn(
+======================================================================
+Trakt Collection & AllDebrid Sync Audit - 2026-09-21 04:00:02
+Mode: APPLY (Changes will be executed)
+======================================================================
+
+1. Fetching AllDebrid magnets...
+   Found 117 active/ready magnets.
+
+2. Fetching Trakt Collection...
+   Found 0 shows and 0 movies in Trakt Collection.
+
+3. Reconciling library...
+
+----------------------------------------------------------------------
+AUDIT SUMMARY:
+  • Phantom Movies in Trakt (missing from AllDebrid): 0
+  • Shows with Phantom Episodes in Trakt: 0
+  • Redundant Magnet Duplicates in AllDebrid: 0
+----------------------------------------------------------------------
+
+4. Executing Removals...
+[Trakt] Nothing to remove.
+[AllDebrid] No duplicates to clean.
+
+Sync completed successfully!
+/opt/homebrew/lib/python3.11/site-packages/requests/__init__.py:109: RequestsDependencyWarning: urllib3 (1.26.20) or chardet (7.4.3)/charset_normalizer (2.1.1) doesn't match a supported version!
+  warnings.warn(
+======================================================================

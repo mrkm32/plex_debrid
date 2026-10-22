@@ -135,12 +135,28 @@ def setup(self, new=False):
                 setting.setup()
         lists = [users[0][0] + "'s watchlist"]
 
+_last_401_log_time = 0
+
 def logerror(response):
+    global _last_401_log_time
     if not response.status_code == 200:
-        ui_print("[trakt] error: " + str(response.content), debug=ui_settings.debug)
-    if response.status_code == 401:
-        ui_print("[trakt] error: (401 unauthorized): trakt api key for user '" + current_user[
-            0] + "' does not seem to work. Consider re-authorizing plex_debrid for this trakt user.")
+        if response.status_code == 401:
+            now = time.time()
+            if now - _last_401_log_time >= 3600:
+                _last_401_log_time = now
+                user_name = current_user[0] if ('current_user' in globals() and len(current_user) > 0) else 'user'
+                ui_print(f"[trakt] error: (401 unauthorized): trakt api key for user '{user_name}' does not seem to work. Consider re-authorizing plex_debrid for this trakt user. (throttled to 1/hr)")
+                try:
+                    import sys
+                    scripts_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "scripts")
+                    if scripts_dir not in sys.path:
+                        sys.path.insert(0, scripts_dir)
+                    from alerts import send_alert
+                    send_alert("Trakt Auth Expired", f"Trakt token for user '{user_name}' expired (401 Unauthorized). Downloads are paused. Run reauth_trakt.py to restore.", error_key="trakt_401")
+                except Exception:
+                    pass
+        else:
+            ui_print("[trakt] error: " + str(response.content), debug=ui_settings.debug)
 
 def get(url):
     try:

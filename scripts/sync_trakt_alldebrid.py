@@ -59,6 +59,13 @@ def get_trakt_collection(token):
         r_shows = requests.get('https://api.trakt.tv/sync/collection/shows?extended=metadata', headers=headers, timeout=25)
         if r_shows.status_code == 200:
             shows = r_shows.json()
+        elif r_shows.status_code == 401:
+            print("[Error] Trakt authentication failed (401 Unauthorized) when fetching shows.")
+            try:
+                from alerts import send_alert
+                send_alert("Trakt Auth Error", "Trakt returned 401 Unauthorized during daily sync audit. Please run reauth_trakt.py.", error_key="trakt_401")
+            except Exception:
+                pass
     except Exception as e:
         print(f"[Error] Failed to fetch Trakt shows collection: {e}")
 
@@ -66,6 +73,13 @@ def get_trakt_collection(token):
         r_movies = requests.get('https://api.trakt.tv/sync/collection/movies?extended=metadata', headers=headers, timeout=25)
         if r_movies.status_code == 200:
             movies = r_movies.json()
+        elif r_movies.status_code == 401:
+            print("[Error] Trakt authentication failed (401 Unauthorized) when fetching movies.")
+            try:
+                from alerts import send_alert
+                send_alert("Trakt Auth Error", "Trakt returned 401 Unauthorized during daily sync audit. Please run reauth_trakt.py.", error_key="trakt_401")
+            except Exception:
+                pass
     except Exception as e:
         print(f"[Error] Failed to fetch Trakt movies collection: {e}")
 
@@ -384,6 +398,14 @@ def main():
     print(f"Trakt Collection & AllDebrid Sync Audit - {time.strftime('%Y-%m-%d %H:%M:%S')}")
     print(f"Mode: {'APPLY (Changes will be executed)' if apply_mode else 'DRY RUN (Report only)'}")
     print("=" * 70)
+
+    # Automatic 30-day log rotation & archiving
+    try:
+        from rotate_logs import rotate_all
+        print("\n0. Running log maintenance (30-day active retention, 6-month archive)...")
+        rotate_all()
+    except Exception as e:
+        print(f"[Warning] Failed to run log rotation: {e}")
 
     print("\n1. Fetching AllDebrid magnets...")
     magnets = get_alldebrid_magnets(apikey)

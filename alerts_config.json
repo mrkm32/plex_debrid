@@ -1,0 +1,7 @@
+{
+    "enabled": true,
+    "method": "imessage",
+    "imessage_recipient": "matthews.mg@gmail.com",
+    "cooldown_hours": 6,
+    "macos_banner": true
+}

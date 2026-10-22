@@ -18,18 +18,36 @@ def main():
     print("Requesting device code from Trakt...")
     sys.stdout.flush()
 
-    try:
-        r = requests.post(
-            "https://api.trakt.tv/oauth/device/code",
-            json={"client_id": CLIENT_ID},
-            headers={"Content-Type": "application/json"},
-            timeout=10
-        )
-        r.raise_for_status()
-        data = r.json()
-    except Exception as e:
-        print(f"Error connecting to Trakt: {e}")
-        sys.exit(1)
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Content-Type": "application/json",
+        "trakt-api-key": CLIENT_ID,
+        "trakt-api-version": "2"
+    }
+
+    data = None
+    for attempt in range(5):
+        try:
+            r = requests.post(
+                "https://api.trakt.tv/oauth/device/code",
+                json={"client_id": CLIENT_ID},
+                headers=headers,
+                timeout=15
+            )
+            if r.status_code == 429:
+                retry_after = int(r.headers.get("Retry-After", 15))
+                print(f"[!] Trakt rate limit hit (429). Waiting {retry_after}s for rate limit window to reset...")
+                sys.stdout.flush()
+                time.sleep(retry_after + 1)
+                continue
+            r.raise_for_status()
+            data = r.json()
+            break
+        except Exception as e:
+            if attempt == 4:
+                print(f"Error connecting to Trakt: {e}")
+                sys.exit(1)
+            time.sleep(3)
 
     device_code = data["device_code"]
     user_code = data["user_code"]
@@ -62,7 +80,7 @@ def main():
             poll_r = requests.post(
                 "https://api.trakt.tv/oauth/device/token",
                 json=poll_payload,
-                headers={"Content-Type": "application/json"},
+                headers=headers,
                 timeout=10
             )
             if poll_r.status_code == 200:

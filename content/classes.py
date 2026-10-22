@@ -1508,14 +1508,6 @@ class media:
 
     def debrid_download(self, force=False):
         debrid.check(self)
-        if len(self.Releases) > 0:
-            if debrid.download(self):
-                if hasattr(self, "versions") and len(self.versions()) > 0:
-                    self.version = self.versions()[0]
-                    self.downloaded()
-                ui_print(f'[debrid] downloading... done')
-                return True, False
-             
         self.bitrate()
         if len(self.Releases) > 0:
             releases.print_releases(self.Releases, True)
