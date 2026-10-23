@@ -552,3 +552,33 @@ Sync completed successfully!
 /opt/homebrew/lib/python3.11/site-packages/requests/__init__.py:109: RequestsDependencyWarning: urllib3 (1.26.20) or chardet (7.4.3)/charset_normalizer (2.1.1) doesn't match a supported version!
   warnings.warn(
 ======================================================================
+Trakt Collection & AllDebrid Sync Audit - 2026-09-22 04:00:05
+Mode: APPLY (Changes will be executed)
+======================================================================
+
+1. Fetching AllDebrid magnets...
+   Found 117 active/ready magnets.
+
+2. Fetching Trakt Collection...
+   Found 0 shows and 0 movies in Trakt Collection.
+
+3. Reconciling library...
+
+----------------------------------------------------------------------
+AUDIT SUMMARY:
+  • Phantom Movies in Trakt (missing from AllDebrid): 0
+  • Shows with Phantom Episodes in Trakt: 0
+  • Redundant Magnet Duplicates in AllDebrid: 0
+----------------------------------------------------------------------
+
+4. Executing Removals...
+[Trakt] Nothing to remove.
+[AllDebrid] No duplicates to clean.
+
+Sync completed successfully!
+/opt/homebrew/lib/python3.11/site-packages/requests/__init__.py:109: RequestsDependencyWarning: urllib3 (1.26.20) or chardet (7.4.3)/charset_normalizer (2.1.1) doesn't match a supported version!
+  warnings.warn(
+[Daily Sync] Sync already completed today (2026-09-22). Exiting.
+/opt/homebrew/lib/python3.11/site-packages/requests/__init__.py:109: RequestsDependencyWarning: urllib3 (1.26.20) or chardet (7.4.3)/charset_normalizer (2.1.1) doesn't match a supported version!
+  warnings.warn(
+======================================================================
