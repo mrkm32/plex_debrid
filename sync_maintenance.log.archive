@@ -609,3 +609,45 @@ Sync completed successfully!
 /opt/homebrew/lib/python3.11/site-packages/requests/__init__.py:109: RequestsDependencyWarning: urllib3 (1.26.20) or chardet (7.4.3)/charset_normalizer (2.1.1) doesn't match a supported version!
   warnings.warn(
 ======================================================================
+Trakt Collection & AllDebrid Sync Audit - 2026-09-24 04:00:05
+Mode: APPLY (Changes will be executed)
+======================================================================
+
+0. Running log maintenance (30-day active retention, 6-month archive)...
+[Log Rotation] plex_debrid.log: 103653 -> 103653 lines retained (30d). Archived: 0 lines.
+[Log Rotation] sync_maintenance.log: 613 -> 613 lines retained (30d).
+
+1. Fetching AllDebrid magnets...
+   Found 128 active/ready magnets.
+
+2. Fetching Trakt Collection...
+   Found 34 shows and 17 movies in Trakt Collection.
+
+3. Reconciling library...
+
+----------------------------------------------------------------------
+AUDIT SUMMARY:
+  • Phantom Movies in Trakt (missing from AllDebrid): 0
+  • Shows with Phantom Episodes in Trakt: 0
+  • Redundant Magnet Duplicates in AllDebrid: 3
+----------------------------------------------------------------------
+
+[!] Redundant Magnet Duplicates in AllDebrid:
+    - Remove #767947967 (Dutton Ranch (2026) S01 (1080p AMZN WEB-DL x265 10bit EAC3 Atmos 5.1 Ghost)) : Duplicate for show:dutton ranch 2026:s1
+      Keeping #704296483 (Dutton Ranch (2026) Season 1 S01 (2160p AMZN WEB-DL x265 HEVC 10bit DDP 5.1 Vyndros))
+    - Remove #759611354 (Reacher.S04E08.1080p.HEVC.x265-MeGusta[EZTVx.to].mkv) : Duplicate for show:reacher:s4e8
+      Keeping #767710865 (Reacher.S04E08.Cut.1080p.WEBRip.10Bit.DDP5.1.x265-NeoNoir.mkv)
+    - Remove #759611348 (Reacher.S04E07.Vote.For.Sampson.1080p.HEVC.x265-MeGusta[EZTVx.to].mkv) : Duplicate for show:reacher:s4e7
+      Keeping #767710787 (Reacher.S04E07.1080p.x265-ELiTE)
+
+4. Executing Removals...
+[Trakt] Nothing to remove.
+[AllDebrid Clean] Deleted redundant magnet #767947967: Dutton Ranch (2026) S01 (1080p AMZN WEB-DL x265 10bit EAC3 Atmos 5.1 Ghost)
+[AllDebrid Clean] Deleted redundant magnet #759611354: Reacher.S04E08.1080p.HEVC.x265-MeGusta[EZTVx.to].mkv
+[AllDebrid Clean] Deleted redundant magnet #759611348: Reacher.S04E07.Vote.For.Sampson.1080p.HEVC.x265-MeGusta[EZTVx.to].mkv
+[AllDebrid Clean] Successfully removed 3 duplicate magnets.
+
+Sync completed successfully!
+/opt/homebrew/lib/python3.11/site-packages/requests/__init__.py:109: RequestsDependencyWarning: urllib3 (1.26.20) or chardet (7.4.3)/charset_normalizer (2.1.1) doesn't match a supported version!
+  warnings.warn(
+======================================================================
