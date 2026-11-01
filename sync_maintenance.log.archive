@@ -842,3 +842,36 @@ Sync completed successfully!
 [Alerts] Exception sending iMessage: Command '['osascript', '-e', 'tell application "Messages"\n    set targetService to 1st account whose service type = iMessage\n    set targetBuddy to participant "matthews.mg@gmail.com" of targetService\n    send "🚨 [Trakt Auth Error]\nTrakt returned 401 Unauthorized during daily sync audit. Please run reauth_trakt.py." to targetBuddy\nend tell']' timed out after 15 seconds
 [Alerts] Exception sending iMessage: Command '['osascript', '-e', 'tell application "Messages"\n    set targetService to 1st account whose service type = iMessage\n    set targetBuddy to participant "matthews.mg@gmail.com" of targetService\n    send "🚨 [Trakt Auth Error]\nTrakt returned 401 Unauthorized during daily sync audit. Please run reauth_trakt.py." to targetBuddy\nend tell']' timed out after 15 seconds
 ======================================================================
+Trakt Collection & AllDebrid Sync Audit - 2026-10-01 04:00:04
+Mode: APPLY (Changes will be executed)
+======================================================================
+
+0. Running log maintenance (30-day active retention, 6-month archive)...
+[Log Rotation] plex_debrid.log: 139312 -> 139312 lines retained (30d). Archived: 0 lines.
+[Log Rotation] sync_maintenance.log: 844 -> 844 lines retained (30d).
+
+1. Fetching AllDebrid magnets...
+   Found 128 active/ready magnets.
+
+2. Fetching Trakt Collection...
+[Error] Trakt authentication failed (401 Unauthorized) when fetching shows.
+[Error] Trakt authentication failed (401 Unauthorized) when fetching movies.
+   Found 0 shows and 0 movies in Trakt Collection.
+
+3. Reconciling library...
+
+----------------------------------------------------------------------
+AUDIT SUMMARY:
+  • Phantom Movies in Trakt (missing from AllDebrid): 0
+  • Shows with Phantom Episodes in Trakt: 0
+  • Redundant Magnet Duplicates in AllDebrid: 0
+----------------------------------------------------------------------
+
+4. Executing Removals...
+[Trakt] Nothing to remove.
+[AllDebrid] No duplicates to clean.
+
+Sync completed successfully!
+/opt/homebrew/lib/python3.11/site-packages/requests/__init__.py:109: RequestsDependencyWarning: urllib3 (1.26.20) or chardet (7.4.3)/charset_normalizer (2.1.1) doesn't match a supported version!
+  warnings.warn(
+======================================================================
