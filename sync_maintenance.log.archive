@@ -1184,3 +1184,35 @@ AUDIT SUMMARY:
 
 Sync completed successfully!
 ======================================================================
+Trakt Collection & AllDebrid Sync Audit - 2026-10-12 04:00:05
+Mode: APPLY (Changes will be executed)
+======================================================================
+
+0. Running log maintenance (30-day active retention, 6-month archive)...
+[Log Rotation] plex_debrid.log: 201520 -> 201520 lines retained (30d). Archived: 0 lines.
+[Log Rotation] sync_maintenance.log: 907 -> 880 lines retained (30d).
+
+1. Fetching AllDebrid magnets...
+   Found 139 active/ready magnets.
+
+2. Fetching Trakt Collection...
+   Found 33 shows and 19 movies in Trakt Collection.
+
+3. Reconciling library...
+
+----------------------------------------------------------------------
+AUDIT SUMMARY:
+  • Phantom Movies in Trakt (missing from AllDebrid): 0
+  • Shows with Phantom Episodes in Trakt: 1
+  • Redundant Magnet Duplicates in AllDebrid: 0
+----------------------------------------------------------------------
+
+[!] Shows with Phantom Episodes in Trakt Collection (not in AllDebrid):
+    - Marshals: S2 (eps: [2])
+
+4. Executing Removals...
+[Trakt Sync] Successfully removed 0 phantom movies and 1 phantom episodes from Trakt Collection.
+[AllDebrid] No duplicates to clean.
+
+Sync completed successfully!
+======================================================================
