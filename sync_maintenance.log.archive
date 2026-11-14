@@ -1245,3 +1245,35 @@ AUDIT SUMMARY:
 
 Sync completed successfully!
 ======================================================================
+Trakt Collection & AllDebrid Sync Audit - 2026-10-14 04:00:04
+Mode: APPLY (Changes will be executed)
+======================================================================
+
+0. Running log maintenance (30-day active retention, 6-month archive)...
+[Log Rotation] plex_debrid.log: 214428 -> 214428 lines retained (30d). Archived: 0 lines.
+[Log Rotation] sync_maintenance.log: 914 -> 884 lines retained (30d).
+
+1. Fetching AllDebrid magnets...
+   Found 139 active/ready magnets.
+
+2. Fetching Trakt Collection...
+   Found 33 shows and 19 movies in Trakt Collection.
+
+3. Reconciling library...
+
+----------------------------------------------------------------------
+AUDIT SUMMARY:
+  • Phantom Movies in Trakt (missing from AllDebrid): 1
+  • Shows with Phantom Episodes in Trakt: 0
+  • Redundant Magnet Duplicates in AllDebrid: 0
+----------------------------------------------------------------------
+
+[!] Phantom Movies in Trakt Collection (not in AllDebrid):
+    - Stranger Than Fiction (2006)
+
+4. Executing Removals...
+[Trakt Sync] Successfully removed 1 phantom movies and 0 phantom episodes from Trakt Collection.
+[AllDebrid] No duplicates to clean.
+
+Sync completed successfully!
+======================================================================
