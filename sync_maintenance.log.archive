@@ -1306,3 +1306,34 @@ AUDIT SUMMARY:
 
 Sync completed successfully!
 ======================================================================
+Trakt Collection & AllDebrid Sync Audit - 2026-10-16 04:00:04
+Mode: APPLY (Changes will be executed)
+======================================================================
+
+0. Running log maintenance (30-day active retention, 6-month archive)...
+[Log Rotation] plex_debrid.log: 225742 -> 225742 lines retained (30d). Archived: 0 lines.
+[Log Rotation] sync_maintenance.log: 918 -> 891 lines retained (30d).
+
+1. Fetching AllDebrid magnets...
+   Found 139 active/ready magnets.
+
+2. Fetching Trakt Collection...
+[Error] Trakt authentication failed (401 Unauthorized) when fetching shows.
+[Error] Trakt authentication failed (401 Unauthorized) when fetching movies.
+   Found 0 shows and 0 movies in Trakt Collection.
+
+3. Reconciling library...
+
+----------------------------------------------------------------------
+AUDIT SUMMARY:
+  • Phantom Movies in Trakt (missing from AllDebrid): 0
+  • Shows with Phantom Episodes in Trakt: 0
+  • Redundant Magnet Duplicates in AllDebrid: 0
+----------------------------------------------------------------------
+
+4. Executing Removals...
+[Trakt] Nothing to remove.
+[AllDebrid] No duplicates to clean.
+
+Sync completed successfully!
+======================================================================
