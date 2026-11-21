@@ -136,11 +136,18 @@ def setup(self, new=False):
         lists = [users[0][0] + "'s watchlist"]
 
 _last_401_log_time = 0
+_rate_limit_until = 0
+_auth_failed_until = 0
+_last_watchlist_poll = 0
+MIN_WATCHLIST_POLL_INTERVAL = 30
+_show_seasons_cache = {}
+SHOW_SEASONS_CACHE_TTL = 1800
 
 def logerror(response):
-    global _last_401_log_time
+    global _last_401_log_time, _rate_limit_until, _auth_failed_until
     if not response.status_code == 200:
         if response.status_code == 401:
+            _auth_failed_until = time.time() + 300
             now = time.time()
             if now - _last_401_log_time >= 3600:
                 _last_401_log_time = now
@@ -155,17 +162,32 @@ def logerror(response):
                     send_alert("Trakt Auth Expired", f"Trakt token for user '{user_name}' expired (401 Unauthorized). Downloads are paused. Run reauth_trakt.py to restore.", error_key="trakt_401")
                 except Exception:
                     pass
+        elif response.status_code == 429 or (response.status_code == 403 and b"1015" in response.content):
+            retry_after = 300
+            raw_retry = response.headers.get("Retry-After")
+            if raw_retry is not None:
+                try:
+                    retry_after = max(60, int(raw_retry))
+                except (TypeError, ValueError):
+                    retry_after = 300
+            _rate_limit_until = time.time() + retry_after
+            ui_print(f"[trakt] warning: rate limited by Trakt/Cloudflare (HTTP {response.status_code}). Backing off Trakt API calls for {retry_after}s.")
         else:
             ui_print("[trakt] error: " + str(response.content), debug=ui_settings.debug)
 
 def get(url):
+    now = time.time()
+    if now < _rate_limit_until or now < _auth_failed_until:
+        return None, None
     try:
         response = session.get(url, headers={
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36',
             'Content-type': "application/json", "trakt-api-key": client_id, "trakt-api-version": "2",
-            "Authorization": "Bearer " + current_user[1]})
+            "Authorization": "Bearer " + current_user[1]}, timeout=15)
         logerror(response)
         header = response.headers
+        if response.status_code != 200:
+            return None, header
         response = json.loads(response.content, object_hook=lambda d: SimpleNamespace(**d))
     except:
         response = None
@@ -173,6 +195,10 @@ def get(url):
     return response, header
 
 def post(url, data):
+    if '/oauth/device/' not in url:
+        now = time.time()
+        if now < _rate_limit_until or now < _auth_failed_until:
+            return None
     try:
         headers = {
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
@@ -182,8 +208,10 @@ def post(url, data):
         }
         if 'current_user' in globals() and len(current_user) > 1 and current_user[1] is not None:
             headers["Authorization"] = "Bearer " + str(current_user[1])
-        response = session.post(url, headers=headers, data=data)
+        response = session.post(url, headers=headers, data=data, timeout=15)
         logerror(response)
+        if response.status_code not in (200, 201):
+            return None
         response = json.loads(response.content, object_hook=lambda d: SimpleNamespace(**d))
         time.sleep(1.1)
     except:
@@ -245,6 +273,8 @@ class watchlist(classes.watchlist):
             if list_type == "watchlist":
                 try:
                     watchlist_items, header = get('https://api.trakt.tv/users/me/watchlist/movies,shows?extended=full')
+                    if not watchlist_items:
+                        continue
                     for element in watchlist_items:
                         if hasattr(element, 'show'):
                             element.show.type = 'show'
@@ -272,6 +302,8 @@ class watchlist(classes.watchlist):
             elif list_type == "collection":
                 try:
                     watchlist_items, header = get('https://api.trakt.tv/sync/collection/shows?extended=full')
+                    if not watchlist_items:
+                        continue
                     for element in watchlist_items:
                         if hasattr(element, 'show'):
                             element.show.type = 'show'
@@ -286,6 +318,8 @@ class watchlist(classes.watchlist):
             elif list_type == "private":
                 try:
                     response, header = get('https://api.trakt.tv/users/me/lists')
+                    if not response:
+                        continue
                     p_list_id = None
                     for p_list in response:
                         if list == user[0] + "'s private list: " + p_list.name:
@@ -293,6 +327,8 @@ class watchlist(classes.watchlist):
                             break
                     if not p_list_id == None:
                         watchlist_items, header = get('https://api.trakt.tv/users/me/lists/'+str(p_list_id)+'/items/movies,shows?extended=full')
+                        if not watchlist_items:
+                            continue
                         for element in watchlist_items:
                             if hasattr(element, 'show'):
                                 element.show.type = 'show'
@@ -320,6 +356,8 @@ class watchlist(classes.watchlist):
             else:
                 try:
                     watchlist_items, header = get('https://api.trakt.tv' + list + '/items/movies,shows?extended=full')
+                    if not watchlist_items:
+                        continue
                     for element in watchlist_items:
                         if hasattr(element, 'show'):
                             element.show.type = 'show'
@@ -349,7 +387,13 @@ class watchlist(classes.watchlist):
     def update(self):
         global current_user
         global users
+        global _last_watchlist_poll
+        now = time.time()
+        if now < _rate_limit_until or now < _auth_failed_until or now - _last_watchlist_poll < MIN_WATCHLIST_POLL_INTERVAL:
+            return False
+        _last_watchlist_poll = now
         refresh = False
+        fetch_failed = False
         new_watchlist = []
         for list in lists:
             list_type = "public"
@@ -364,6 +408,9 @@ class watchlist(classes.watchlist):
             if list_type == "watchlist":
                 try:
                     watchlist_items, header = get('https://api.trakt.tv/users/me/watchlist/movies,shows?extended=full')
+                    if watchlist_items is None:
+                        fetch_failed = True
+                        continue
                     for element in watchlist_items:
                         if hasattr(element, 'show'):
                             element.show.type = 'show'
@@ -393,10 +440,14 @@ class watchlist(classes.watchlist):
                             new_watchlist += [element.movie]
                 except Exception as e:
                     ui_print("[trakt error]: (exception): " + str(e), debug=ui_settings.debug)
+                    fetch_failed = True
                     continue
             if list_type == "private":
                 try:
                     response, header = get('https://api.trakt.tv/users/me/lists')
+                    if response is None:
+                        fetch_failed = True
+                        continue
                     p_list_id = None
                     for p_list in response:
                         if list == user[0] + "'s private list: " + p_list.name:
@@ -404,6 +455,9 @@ class watchlist(classes.watchlist):
                             break
                     if not p_list_id == None:
                         watchlist_items, header = get('https://api.trakt.tv/users/me/lists/'+str(p_list_id)+'/items/movies,shows?extended=full')
+                        if watchlist_items is None:
+                            fetch_failed = True
+                            continue
                         for element in watchlist_items:
                             if hasattr(element, 'show'):
                                 element.show.type = 'show'
@@ -433,10 +487,12 @@ class watchlist(classes.watchlist):
                                 new_watchlist += [element.movie]
                 except Exception as e:
                     ui_print("[trakt error]: (exception): " + str(e), debug=ui_settings.debug)
+                    fetch_failed = True
                     continue
-        for element in self.data[:]:
-            if not element in new_watchlist:
-                self.data.remove(element)
+        if not fetch_failed:
+            for element in self.data[:]:
+                if not element in new_watchlist:
+                    self.data.remove(element)
         if refresh:
             return True
         return False
@@ -577,18 +633,28 @@ class show(classes.media):
             self.originallyAvailableAt = datetime.datetime.strptime(self.first_aired,'%Y-%m-%dT%H:%M:%S.000Z').strftime('%Y-%m-%d')
         except:
             self.originallyAvailableAt = datetime.datetime.utcnow().strftime('%Y-%m-%d')
-        response, header = get(
-            'https://api.trakt.tv/shows/' + str(self.ids.trakt) + '/seasons?extended=episodes,full')
+        show_key = str(self.ids.trakt)
+        cached = _show_seasons_cache.get(show_key)
+        if cached and time.time() - cached[0] < SHOW_SEASONS_CACHE_TTL:
+            response = copy.deepcopy(cached[1])
+        else:
+            response, header = get(
+                'https://api.trakt.tv/shows/' + show_key + '/seasons?extended=episodes,full')
+            if response is not None:
+                _show_seasons_cache[show_key] = (time.time(), copy.deepcopy(response))
+            if time.time() >= _rate_limit_until and time.time() >= _auth_failed_until:
+                time.sleep(0.25)
         leafCount = 0
-        for season_ in response:
-            if not season_.number == 0:
-                season_.parentYear = self.year
-                season_.parentTitle = self.title
-                season_.parentGuid = self.guid
-                season_.parentEID = self.EID
-                if hasattr(self,"user"):
-                    season_.user = self.user
-                self.Seasons += [season(season_)]
+        if response:
+            for season_ in response:
+                if not season_.number == 0:
+                    season_.parentYear = self.year
+                    season_.parentTitle = self.title
+                    season_.parentGuid = self.guid
+                    season_.parentEID = self.EID
+                    if hasattr(self,"user"):
+                        season_.user = self.user
+                    self.Seasons += [season(season_)]
         for season_ in self.Seasons:
             leafCount += season_.leafCount
         self.leafCount = leafCount
@@ -646,6 +712,8 @@ class library(classes.library):
         try:
             collection_movies, header = get('https://api.trakt.tv/sync/collection/movies?extended=metadata')
             collection_shows, header = get('https://api.trakt.tv/sync/collection/shows?extended=metadata')
+            if collection_movies is None or collection_shows is None:
+                raise RuntimeError("Failed to fetch Trakt collection (API returned None)")
             watchlist_items += collection_movies
             watchlist_items += collection_shows
             for element in watchlist_items:

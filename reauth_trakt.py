@@ -10,11 +10,57 @@ CLIENT_ID = "pHbVNzLR5da9P4-GODsYtV6rZohyyhyLgCH73LQK6R0"
 CLIENT_SECRET = "5Jmd-x75KhP2BXaouHosxkoITiz7gR5fPDVc2ERTrDA"
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 SETTINGS_PATH = os.path.join(BASE_DIR, "settings.json")
+ALERTS_STATE_PATH = os.path.join(BASE_DIR, ".alerts_state.json")
+DAEMON_LABEL = "com.plexdebrid.daemon"
+DAEMON_PLIST = os.path.expanduser(f"~/Library/LaunchAgents/{DAEMON_LABEL}.plist")
+
+
+def _is_rate_limited(resp):
+    """Return True for Trakt 429 or Cloudflare Error 1015 (HTTP 403/429)."""
+    if resp.status_code == 429:
+        return True
+    if resp.status_code == 403:
+        body = resp.text.lower()
+        return "1015" in body or "rate limited" in body
+    return False
+
+
+def _wait_for_rate_limit(resp, context="request"):
+    """Wait out a 429 or Cloudflare 1015 rate limit with a visible countdown."""
+    raw_retry = resp.headers.get("Retry-After")
+    retry_after = 60
+    if raw_retry is not None:
+        try:
+            retry_after = max(1, int(raw_retry))
+        except (TypeError, ValueError):
+            retry_after = 60
+    kind = "Cloudflare Error 1015" if resp.status_code == 403 else "Trakt 429"
+    print(f"\n[!] {kind} rate limit hit during {context} (HTTP {resp.status_code}). Waiting {retry_after}s...")
+    sys.stdout.flush()
+    remaining = retry_after
+    while remaining > 0:
+        step = min(15, remaining)
+        print(f"    {remaining}s remaining...")
+        sys.stdout.flush()
+        time.sleep(step)
+        remaining -= step
+
 
 def main():
     print("\n" + "=" * 60)
     print("plex_debrid Trakt Re-Authorization")
     print("=" * 60)
+
+    # Stop background daemon so it doesn't compete or trigger rate limits during OAuth
+    uid = os.getuid()
+    print(f"Stopping {DAEMON_LABEL} daemon before OAuth...")
+    sys.stdout.flush()
+    subprocess.run(
+        ["launchctl", "bootout", f"gui/{uid}/{DAEMON_LABEL}"],
+        capture_output=True,
+        text=True,
+    )
+
     print("Requesting device code from Trakt...")
     sys.stdout.flush()
 
@@ -34,11 +80,8 @@ def main():
                 headers=headers,
                 timeout=15
             )
-            if r.status_code == 429:
-                retry_after = int(r.headers.get("Retry-After", 15))
-                print(f"[!] Trakt rate limit hit (429). Waiting {retry_after}s for rate limit window to reset...")
-                sys.stdout.flush()
-                time.sleep(retry_after + 1)
+            if _is_rate_limited(r):
+                _wait_for_rate_limit(r, context="device code request")
                 continue
             r.raise_for_status()
             data = r.json()
@@ -106,9 +149,8 @@ def main():
             elif poll_r.status_code == 418:
                 print("\n[!] User denied authorization.")
                 sys.exit(1)
-            elif poll_r.status_code == 429:
-                # Polling too quickly, wait interval
-                time.sleep(interval)
+            elif _is_rate_limited(poll_r):
+                _wait_for_rate_limit(poll_r, context="token polling")
                 continue
             else:
                 sys.stdout.write(f"\n[?] Unexpected response: {poll_r.status_code}\n")
@@ -164,12 +206,29 @@ def main():
         print(f"[!] Failed to update settings.json: {e}")
         sys.exit(1)
 
+    # Clear trakt_401 alert state so future alerts work cleanly
+    try:
+        if os.path.exists(ALERTS_STATE_PATH):
+            with open(ALERTS_STATE_PATH, "r") as f:
+                alert_state = json.load(f)
+            if "trakt_401" in alert_state:
+                alert_state.pop("trakt_401", None)
+                with open(ALERTS_STATE_PATH, "w") as f:
+                    json.dump(alert_state, f, indent=2)
+                print("[✓] Cleared trakt_401 cooldown state in .alerts_state.json.")
+    except Exception as e:
+        print(f"Warning: Could not update .alerts_state.json: {e}")
+
     # Restart launchd daemon
     print("Restarting plex_debrid launchd daemon...")
     try:
-        uid = os.getuid()
+        subprocess.run(
+            ["launchctl", "bootstrap", f"gui/{uid}", DAEMON_PLIST],
+            capture_output=True,
+            text=True
+        )
         res = subprocess.run(
-            ["launchctl", "kickstart", "-k", f"gui/{uid}/com.plexdebrid.daemon"],
+            ["launchctl", "kickstart", "-k", f"gui/{uid}/{DAEMON_LABEL}"],
             capture_output=True,
             text=True
         )
