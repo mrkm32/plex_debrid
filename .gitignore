@@ -398,3 +398,7 @@ FodyWeavers.xsd
 *.sln.iml
 settings.json
 .last_sync_date
+recommender_config.json
+webapp/data/
+webapp.log
+.pytest_cache/

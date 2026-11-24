@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>WatchNight — Mark &amp; Shelly</title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="WatchNight" />
+  <meta name="theme-color" content="#0A0D14" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="apple-touch-icon" href="/static/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" href="/static/icon-192.png" />
+  <link rel="stylesheet" href="/static/app.css" />
+</head>
+<body>
+  <!-- First-visit Profile Picker -->
+  <div id="profile-overlay" class="overlay hidden" role="dialog" aria-modal="true">
+    <div class="overlay-card profile-picker-card">
+      <div class="brand-mark-lg">🎬</div>
+      <h1>Welcome to WatchNight</h1>
+      <p class="muted">Pick who's holding this phone. Your picks &amp; likes stay saved here automatically.</p>
+      <div class="profile-choice-grid">
+        <button class="profile-choice-btn shelly" data-pick-user="shelly">
+          <span class="avatar-circle shelly">S</span>
+          <span class="choice-name">Shelly</span>
+          <span class="choice-sub">Netflix, Prime, Hulu &amp; Couple Picks</span>
+        </button>
+        <button class="profile-choice-btn mark" data-pick-user="mark">
+          <span class="avatar-circle mark">M</span>
+          <span class="choice-name">Mark</span>
+          <span class="choice-sub">Trakt Library &amp; Couple Picks</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- App Shell -->
+  <div class="app-shell">
+    <header class="top-bar">
+      <div class="brand-wrap">
+        <span class="brand-dot"></span>
+        <span class="brand-title">WatchNight</span>
+        <span id="engine-badge" class="engine-badge">Trakt Picks</span>
+      </div>
+      <div class="top-controls">
+        <div class="user-switcher" role="group" aria-label="Active profile">
+          <button id="switch-shelly" class="user-pill" data-user="shelly">Shelly</button>
+          <button id="switch-mark" class="user-pill" data-user="mark">Mark</button>
+        </div>
+        <button id="open-settings-btn" class="icon-btn" aria-label="Settings" title="Settings">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          <span id="settings-dot" class="dot-indicator hidden"></span>
+        </button>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <!-- Shelly Onboarding Nudge -->
+      <div id="shelly-nudge" class="nudge-banner hidden">
+        <div class="nudge-text">
+          <strong>👋 Hey Shelly!</strong> Tap 5 shows or movies you love so WatchNight nails your taste right away.
+        </div>
+        <div class="nudge-actions">
+          <button id="nudge-seeder-btn" class="btn btn-sm btn-gold">Pick Favorites (60s)</button>
+          <button id="nudge-dismiss-btn" class="btn-ghost-sm" aria-label="Dismiss">✕</button>
+        </div>
+      </div>
+
+      <!-- TAB 1 & 2: DECK VIEW ("For Us" and "For Me") -->
+      <section id="view-deck" class="tab-view active">
+        <div class="deck-controls">
+          <div class="deck-header-row">
+            <div>
+              <h2 id="deck-heading">For Us Tonight</h2>
+              <p id="deck-subheading" class="muted-xs">Both tap 👍 to auto-match &amp; send to Infuse</p>
+            </div>
+            <div class="segmented-sm" id="media-filter-group">
+              <button class="seg-btn active" data-media-type="both">All</button>
+              <button class="seg-btn" data-media-type="movie">Movies</button>
+              <button class="seg-btn" data-media-type="show">TV</button>
+            </div>
+          </div>
+
+          <div class="mood-chips" id="mood-chips">
+            <button class="chip" data-mood="Charming romantic comedy (rom-com) with great chemistry, witty banter, and a feel-good payoff">💕 Rom-Com</button>
+            <button class="chip" data-mood="Cozy, funny, and easy to watch">Cozy &amp; Funny</button>
+            <button class="chip" data-mood="Gripping mystery or thriller with twists">Gripping Mystery</button>
+            <button class="chip" data-mood="Smart sci-fi or clever high-concept story">Smart Sci-Fi</button>
+            <button class="chip" data-mood="Warm feel-good story with great characters">Feel-Good</button>
+            <button class="chip" data-mood="Great movie under 2 hours">Under 2 Hours</button>
+            <button class="chip" data-mood="Bingeable limited series or miniseries">Miniseries</button>
+          </div>
+
+          <div class="ai-prompt-bar">
+            <input id="mood-input" type="text" placeholder="Any vibe? e.g. clever comedy thriller, no horror..." autocomplete="off" />
+            <button id="ask-ai-btn" class="btn btn-primary">
+              <span class="sparkle">✨</span> Ask AI
+            </button>
+          </div>
+        </div>
+
+        <div id="deck-warning" class="info-banner hidden"></div>
+
+        <div id="deck-stage" class="deck-stage">
+          <!-- Card rendered here by JS -->
+        </div>
+      </section>
+
+      <!-- TAB 3: SEARCH & BROWSE -->
+      <section id="view-search" class="tab-view">
+        <div class="search-header">
+          <div class="search-input-wrap">
+            <span class="search-icon">🔍</span>
+            <input id="search-input" type="search" placeholder="Search any Netflix, Prime, Hulu, or theater title..." autocomplete="off" />
+            <button id="search-clear-btn" class="clear-btn hidden" aria-label="Clear search">✕</button>
+          </div>
+          <div class="segmented-sm" id="search-type-group">
+            <button class="seg-btn active" data-search-type="movie,show">All</button>
+            <button class="seg-btn" data-search-type="movie">Movies</button>
+            <button class="seg-btn" data-search-type="show">TV</button>
+          </div>
+        </div>
+
+        <div id="browse-tabs" class="browse-pills">
+          <button class="pill active" data-cat="trending_shows">Trending TV</button>
+          <button class="pill" data-cat="trending_movies">Trending Movies</button>
+          <button class="pill" data-cat="romcoms">💕 Rom-Coms</button>
+          <button class="pill" data-cat="popular_shows">Popular TV</button>
+          <button class="pill" data-cat="popular_movies">Popular Movies</button>
+        </div>
+
+        <div id="search-results" class="media-list"></div>
+      </section>
+
+      <!-- TAB 4: INFUSE QUEUE & TASTE PROFILE -->
+      <section id="view-infuse" class="tab-view">
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h3>Sent to Infuse</h3>
+              <p class="muted-xs">Auto-resolves in seconds via AllDebrid &amp; plex_debrid</p>
+            </div>
+            <button id="refresh-infuse-btn" class="btn btn-sm btn-ghost">↻ Refresh</button>
+          </div>
+          <div id="infuse-queue-list" class="stack-list"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h3>Our Mutual Matches 💛</h3>
+              <p class="muted-xs">Titles both Mark &amp; Shelly tapped Want on</p>
+            </div>
+          </div>
+          <div id="matches-list" class="stack-list"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h3 id="taste-heading">Shelly's Taste &amp; Imports</h3>
+              <p class="muted-xs">Helps AI learn what you watch across Netflix, Prime &amp; Hulu</p>
+            </div>
+            <button id="open-seeder-btn" class="btn btn-sm btn-gold">❤️ 60s Picker</button>
+          </div>
+
+          <div class="import-box">
+            <div class="import-info">
+              <strong>Import Netflix Viewing History (Optional)</strong>
+              <p class="muted-xs">
+                On <code>netflix.com/viewingactivity</code>, click <em>Download all</em> at the bottom and upload your <code>NetflixViewingHistory.csv</code>.
+              </p>
+            </div>
+            <label class="btn btn-sm btn-secondary upload-label">
+              Upload CSV
+              <input id="netflix-csv-input" type="file" accept=".csv,text/csv" hidden />
+            </label>
+          </div>
+          <div id="netflix-import-result" class="muted-xs hidden"></div>
+
+          <div class="notes-grid">
+            <label class="field">
+              <span>Shelly's Taste Notes</span>
+              <textarea id="note-shelly" rows="2" placeholder="e.g. Loves witty mysteries, cozy comedies, Bridgerton, Ted Lasso. No gore or slow-burn bleak dramas."></textarea>
+            </label>
+            <label class="field">
+              <span>Mark's Taste Notes</span>
+              <textarea id="note-mark" rows="2" placeholder="e.g. Loves smart sci-fi, prestige thrillers, sharp comedies."></textarea>
+            </label>
+            <label class="field">
+              <span>Watching Together Rules</span>
+              <textarea id="note-together" rows="2" placeholder="e.g. Movies under 2h15m on weeknights, no jump-scare horror, high energy pacing."></textarea>
+            </label>
+            <button id="save-notes-btn" class="btn btn-primary btn-full">Save Taste Notes</button>
+          </div>
+
+          <div class="taste-lists-wrap">
+            <h4>Liked &amp; Wanted (<span id="taste-user-label">Shelly</span>)</h4>
+            <div id="taste-items-list" class="chip-grid"></div>
+            <div id="netflix-top-wrap" class="hidden">
+              <h4 style="margin-top:14px">Top Imported Netflix Titles</h4>
+              <div id="netflix-top-list" class="chip-grid"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Bottom Tab Navigation -->
+    <nav class="bottom-nav" aria-label="Primary navigation">
+      <button class="nav-btn active" data-tab="together">
+        <span class="nav-icon">💛</span>
+        <span class="nav-label">For Us</span>
+      </button>
+      <button class="nav-btn" data-tab="me">
+        <span class="nav-icon">✨</span>
+        <span class="nav-label" id="nav-me-label">For Shelly</span>
+      </button>
+      <button class="nav-btn" data-tab="search">
+        <span class="nav-icon">🔍</span>
+        <span class="nav-label">Search</span>
+      </button>
+      <button class="nav-btn" data-tab="infuse">
+        <span class="nav-icon">📺</span>
+        <span class="nav-label">Infuse &amp; Taste</span>
+        <span id="nav-infuse-badge" class="nav-badge hidden">0</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- 60s Poster Seeder Modal -->
+  <div id="seeder-modal" class="overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal-sheet modal-lg">
+      <div class="modal-header">
+        <div>
+          <h3>Tap Favorites You Loved ❤️</h3>
+          <p class="muted-xs">Tap any shows or movies you've already loved on Netflix, Prime, Hulu, or Apple TV+</p>
+        </div>
+        <button id="close-seeder-btn" class="icon-btn" aria-label="Close">✕</button>
+      </div>
+      <div class="seeder-toolbar">
+        <input id="seeder-filter-input" type="search" placeholder="Filter titles..." autocomplete="off" />
+        <span id="seeder-count-badge" class="pill-stat">0 picked</span>
+      </div>
+      <div id="seeder-grid" class="seeder-grid"></div>
+      <div class="modal-footer">
+        <button id="done-seeder-btn" class="btn btn-primary btn-full">Done — Get My Picks</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="settings-modal" class="overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3>WatchNight Settings</h3>
+        <button id="close-settings-btn" class="icon-btn" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="settings-section">
+          <h4>AI Recommender</h4>
+          <label class="field">
+            <span>AI Provider</span>
+            <select id="set-provider">
+              <option value="gemini">Google Gemini</option>
+              <option value="openai">OpenAI</option>
+              <option value="anthropic">Anthropic Claude</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Model</span>
+            <select id="set-model-select"></select>
+          </label>
+          <label class="field">
+            <span>Custom Model ID (optional override)</span>
+            <input id="set-model-custom" type="text" placeholder="Leave blank to use selected preset" autocomplete="off" />
+          </label>
+          <label class="field">
+            <span>API Key <small id="set-key-hint" class="muted-xs"></small></span>
+            <input id="set-api-key" type="password" placeholder="Paste API key (stored locally only)" autocomplete="off" />
+          </label>
+          <div class="btn-row">
+            <button id="test-ai-btn" class="btn btn-secondary">Test Connection</button>
+            <button id="save-ai-btn" class="btn btn-primary">Save AI Settings</button>
+          </div>
+          <div id="ai-test-status" class="status-line hidden"></div>
+        </div>
+
+        <div class="settings-section">
+          <h4>Match Automation</h4>
+          <label class="toggle-row">
+            <span>Auto-send mutual matches to Infuse</span>
+            <input id="set-auto-send" type="checkbox" checked />
+          </label>
+          <label class="toggle-row">
+            <span>Send iMessage alert on mutual match</span>
+            <input id="set-imessage-match" type="checkbox" />
+          </label>
+        </div>
+
+        <div class="settings-section">
+          <h4>Trakt Library Sync (mrkm32)</h4>
+          <p id="set-trakt-stats" class="muted-xs">Loading Trakt stats...</p>
+          <button id="sync-trakt-btn" class="btn btn-secondary btn-full">Sync Trakt History Now</button>
+        </div>
+
+        <div class="settings-section">
+          <h4>Open on Shelly's iPhone</h4>
+          <p class="muted-xs">Scan from her iPhone Camera on home Wi-Fi, then tap <strong>Share → Add to Home Screen</strong>.</p>
+          <div class="qr-card">
+            <img id="qr-img" src="/api/qr" alt="WatchNight QR code" width="160" height="160" />
+            <div class="qr-urls">
+              <div><small class="muted-xs">Local Name</small><br /><code id="lan-local-url">http://Marks-Mac-mini.local:8787</code></div>
+              <div style="margin-top:8px"><small class="muted-xs">IP Fallback</small><br /><code id="lan-ip-url">http://192.168.1.65:8787</code></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

@@ -5,18 +5,20 @@ An automated background media aggregation and stream-resolution daemon running o
 
 ### System Diagram & Flow
 ```
-[Trakt Watchlist / Plex Watchlist]
-                │
-                ▼
-      [plex_debrid Engine (main.py)]
-      ├── Scrapes media releases & torrent hashes
-      ├── Resolves cached streams via Debrid API
-      └── Adds high-bandwidth streams to Plex Library
-                │
-         ┌──────┴──────┐
-         ▼             ▼
-   [com.plexdebrid.daemon]      [com.plexdebrid.daily-sync]
-   (Continuous Daemon Service)  (Daily 4:00 AM Sync & Maintenance)
+[WatchNight Couple PWA (:8787)] ──(Match / 1-Tap Send)──┐
+                                                         ▼
+                                    [Trakt Watchlist / Plex Watchlist]
+                                                    │
+                                                    ▼
+                                          [plex_debrid Engine (main.py)]
+                                          ├── Scrapes media releases & torrent hashes
+                                          ├── Resolves cached streams via Debrid API
+                                          └── Adds high-bandwidth streams to Plex/Infuse Library
+                                                    │
+         ┌──────────────────────┬───────────────────┴──────────────────┐
+         ▼                      ▼                                      ▼
+   [com.plexdebrid.daemon]      [com.plexdebrid.daily-sync]     [com.plexdebrid.webapp]
+   (Continuous Daemon Service)  (Daily 4:00 AM Sync & Maint.)   (WatchNight Couple PWA :8787)
                                 ├── scripts/sync_trakt_alldebrid.py
                                 ├── scripts/rotate_logs.py
                                 └── scripts/alerts.py
@@ -27,6 +29,7 @@ An automated background media aggregation and stream-resolution daemon running o
 /Users/markmatthews/plex_debrid/
 ├── main.py                          # Primary plex_debrid service runner
 ├── settings.json                    # Application credentials, library IDs & scraper rules
+├── recommender_config.json          # Local WatchNight AI provider, taste notes & preferences (gitignored)
 ├── alerts_config.json               # Alert notification webhook settings
 ├── reauth_trakt.py                  # Standalone Trakt OAuth refresh/re-authorization helper
 ├── base/                            # Core service primitives
@@ -35,12 +38,24 @@ An automated background media aggregation and stream-resolution daemon running o
 ├── scraper/                         # Release parsers and indexers
 ├── store/                           # Local state and cache management
 ├── ui/                              # Terminal and web UI components
+├── webapp/                          # WatchNight Couple Recommender & Infuse PWA (:8787)
+│   ├── server.py                    # Starlette/Uvicorn API server, image proxy & QR generator
+│   ├── config.py                    # Recommender config & mtime-cached settings.json reader
+│   ├── db.py                        # SQLite store (media, history, reactions, matches, Infuse queue)
+│   ├── trakt_client.py              # Paginated Trakt sync, search, browse & watchlist client
+│   ├── alldebrid_client.py          # AllDebrid magnet verification for live Infuse status
+│   ├── netflix_import.py            # Netflix ViewingActivity CSV parser & Trakt resolver
+│   ├── ai_recommender.py            # Gemini / OpenAI / Anthropic recommender + Trakt fallback
+│   ├── static/                      # Mobile-first dark PWA frontend (HTML, CSS, JS, icons)
+│   ├── tests/                       # Automated pytest suite
+│   └── data/                        # SQLite DB & cached poster images (gitignored)
 ├── scripts/                         # Maintenance automation
 │   ├── sync_trakt_alldebrid.py      # Automated Trakt ↔ AllDebrid sync runner
 │   ├── rotate_logs.py               # Log maintenance and rotation utility
 │   └── alerts.py                    # Alert dispatch utility
 ├── sync_maintenance.log             # Daily 4:00 AM maintenance execution log
 ├── plex_debrid.log                  # Core daemon streaming and resolution log
+├── webapp.log                       # WatchNight PWA server log (gitignored)
 ├── README.md                        # Upstream project documentation
 └── PROJECT.md                       # Master architecture & project state
 ```
@@ -53,6 +68,7 @@ An automated background media aggregation and stream-resolution daemon running o
 | F3 | Trakt Re-Authorization | Dedicated OAuth reauth tool (`reauth_trakt.py`) | ACTIVE |
 | F4 | Automated Log Rotation | Daily archiving of `sync_maintenance.log` to keep storage lean | ACTIVE (`scripts/rotate_logs.py`) |
 | F5 | Discord/Webhook Alerts | Status and failure alerts dispatched on sync interruptions | ACTIVE (`scripts/alerts.py`) |
+| F6 | WatchNight Couple PWA | Dual-profile AI recommender, match deck, Netflix import & 1-tap Infuse bridge | ACTIVE (`com.plexdebrid.webapp`) |
 
 ---
 
@@ -64,6 +80,7 @@ An automated background media aggregation and stream-resolution daemon running o
 * **LaunchAgent Services**:
   * `com.plexdebrid.daemon.plist`: Continuous background daemon.
   * `com.plexdebrid.daily-sync.plist`: Daily trigger at 4:00 AM Central.
+  * `com.plexdebrid.webapp.plist`: WatchNight web app on port `8787` (`http://Marks-Mac-mini.local:8787`).
 
 ### 2. Maintenance & Re-Authentication Runbook
 * If Trakt tokens expire, run: `python3 /Users/markmatthews/plex_debrid/reauth_trakt.py`.
